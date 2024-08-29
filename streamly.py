@@ -3,7 +3,7 @@ import pandas as pd
 from typing import List
 import plotly.express as px
 from transformers import pipeline
-
+from transformers import AutoTokenizer, AutoModelForCausalLM
 # Load your model from Hugging Face
 model = pipeline("text-generation", model="Najii/Llama-Guard", use_auth_token="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")
 
