@@ -4,7 +4,15 @@ import pandas as pd
 from typing import List
 import plotly.express as px
 from transformers import pipeline, AutoModelForCausalLM, AutoTokenizer
+from transformers import pipeline
 
+API_TOKEN = "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"
+
+try:
+    model = pipeline("text-generation", model="Najii/Llama-Guard", use_auth_token=API_TOKEN)
+    print("Model loaded successfully!")
+except Exception as e:
+    print(f"Error loading model: {str(e)}")
 # Load the Hugging Face API token from the environment variable
 API_TOKEN = os.getenv("HUGGINGFACE_API_TOKEN")
 
