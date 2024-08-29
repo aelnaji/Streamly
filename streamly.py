@@ -3,17 +3,19 @@ import streamlit as st
 import pandas as pd
 from typing import List
 import plotly.express as px
-from transformers import pipeline
-from transformers import AutoModelForCausalLM, AutoTokenizer
-# Load the Hugging Face API token from the environment variable
-API_TOKEN = os.getenv("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")
+from transformers import pipeline, AutoModelForCausalLM, AutoTokenizer
 
-# Load your model from Hugging Face using the API token
+# Load the Hugging Face API token from the environment variable
+API_TOKEN = os.getenv("HUGGINGFACE_API_TOKEN")
+
+# Check if the API token is available
 if API_TOKEN is None:
     st.error("Hugging Face API token not found. Please set the HUGGINGFACE_API_TOKEN environment variable.")
 else:
     try:
-        model = pipeline("text-generation", model="Najii/Llama-Guard", use_auth_token="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")
+        # Load the model from Hugging Face using the API token
+        model = pipeline("text-generation", model="Najii/Llama-Guard", use_auth_token=API_TOKEN)
+        st.success("Model loaded successfully!")
     except Exception as e:
         st.error(f"Error loading model: {str(e)}")
 
@@ -41,64 +43,9 @@ def plot_publication_counts(df, cumulative):
     fig = px.line(df, x=df.index, y="count", title="Publication Counts")
     return fig
 
-def plot_cluster_map(df):
-    fig = px.scatter(df, x="x", y="y", color="cluster", title="Topic Model Map")
-    return fig
-
-def plot_repos_by_feature(df, feature):
-    fig = px.histogram(df, x=feature, title=f"Repositories by {feature}")
-    return fig
-
-def get_max_report_date():
-    return pd.to_datetime("2024-08-29").date()
-
-def initialize_weekly_summary(date_report):
-    # Placeholder function to simulate summary initialization
-    return "Weekly content", "Highlight content", "Repo content"
-
-def query_llmpedia_new(user_question, response_length):
-    # Use the model to generate a response
-    response = model(user_question, max_length=150, num_return_sequences=1)[0]['generated_text']
-    referenced_codes = []
-    relevant_codes = []
-    return response, referenced_codes, relevant_codes
-
-def get_img_link_for_blob(blob_name):
-    return "https://via.placeholder.com/150"
-
-def main():
-    # Load data
-    papers_df = pd.DataFrame({
-        "title": ["Paper 1", "Paper 2"],
-        "x": [1, 2],
-        "y": [2, 3],
-        "cluster": [1, 2],
-        "count": [10, 20],
-    })
-    full_papers_df = papers_df.set_index("title")
-    year = 2024
-    published_df = papers_df
-
-    if len(papers_df) == 0:
-        st.markdown("No papers found.")
-        return
-
-    ## Content tabs.
-    content_tabs = st.tabs(
-        [
-            "🧮 Grid View",
-            "🗺️ Over View",
-            "🔍 Focus View",
-            "🤖 Chat",
-            "⚙️  Repositories",
-            "🗞 Weekly Report",
-        ]
-    )
-
-    with content_tabs[0]:
-        ## Grid view.
-        if "page_number" not in st.session_state:
-            st.session_state.page_number = 0
+# Initialize session state for pagination
+if "page_number" not in st.session_state:
+    st.session_state.page_number = 0
 
         papers_df_subset = create_pagination(papers_df, items_per_page=25, label="grid")
         generate_grid_gallery(papers_df_subset)
