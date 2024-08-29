@@ -4,7 +4,7 @@ import pandas as pd
 from typing import List
 import plotly.express as px
 from transformers import pipeline
-
+from transformers import AutoModelForCausalLM, AutoTokenizer
 # Load the Hugging Face API token from the environment variable
 API_TOKEN = os.getenv("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")
 
