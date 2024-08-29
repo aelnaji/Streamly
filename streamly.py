@@ -1,13 +1,25 @@
+import os
 import streamlit as st
 import pandas as pd
 from typing import List
 import plotly.express as px
 from transformers import pipeline
-from transformers import AutoTokenizer, AutoModelForCausalLM
-# Load your model from Hugging Face
-model = pipeline("text-generation", model="Najii/Llama-Guard", use_auth_token="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")
 
-# Define your support functions (placeholders)
+# Load the Hugging Face API token from the environment variable
+API_TOKEN = os.getenv("HUGGINGFACE_API_TOKEN")
+
+# Load your model from Hugging Face using the API token
+if API_TOKEN is None:
+    st.error("Hugging Face API token not found. Please set the HUGGINGFACE_API_TOKEN environment variable.")
+else:
+    try:
+        model = pipeline("text-generation", model="Najii/Llama-Guard", use_auth_token="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")
+    except Exception as e:
+        st.error(f"Error loading model: {str(e)}")
+
+# The rest of your code...
+
+# Define your support functions
 def create_pagination(df, items_per_page, label):
     start_idx = st.session_state.page_number * items_per_page
     end_idx = start_idx + items_per_page
@@ -284,3 +296,4 @@ def main():
         main()
     except Exception as e:
         st.error(f"Error: {str(e)}")
+
