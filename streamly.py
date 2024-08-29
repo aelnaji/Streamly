@@ -6,7 +6,7 @@ import plotly.express as px
 from transformers import pipeline
 
 # Load the Hugging Face API token from the environment variable
-API_TOKEN = os.getenv("HUGGINGFACE_API_TOKEN")
+API_TOKEN = os.getenv("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")
 
 # Load your model from Hugging Face using the API token
 if API_TOKEN is None:
