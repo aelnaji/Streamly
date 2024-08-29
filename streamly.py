@@ -1,13 +1,11 @@
 import os
 import streamlit as st
-import pandas as pd
 from typing import List
 import plotly.express as px
-from transformers import pipeline, AutoModelForCausalLM, AutoTokenizer
-from transformers import pipeline
-
-API_TOKEN = "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"
-
+import sys
+import transformers
+print(f"Python version: {sys.version}")
+print(f"Transformers version: {transformers.__version__}")
 try:
     model = pipeline("text-generation", model="Najii/Llama-Guard", use_auth_token=API_TOKEN)
     print("Model loaded successfully!")
